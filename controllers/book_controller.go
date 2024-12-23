@@ -32,14 +32,16 @@ func (c *BookController) CreateBook(ctx *gin.Context) {
 	var book models.Book
 	if err := ctx.ShouldBindJSON(&book); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
-	creteadBook, err := c.service.CreateBook(book)
+
+	createdBook, err := c.service.CreateBook(book)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	ctx.JSON(http.StatusCreated, helpers.ResponseSuccess(creteadBook, "Berhasil Menambahkan Data Buku", http.StatusCreated))
+	ctx.JSON(http.StatusCreated, helpers.ResponseSuccess(createdBook, "Berhasil Menambahkan Data Buku", http.StatusCreated))
 }
 
 func (c *BookController) GetBookById(ctx *gin.Context) {
@@ -58,8 +60,10 @@ func (c *BookController) UpdateBook(ctx *gin.Context) {
 
 	if err := ctx.ShouldBindJSON(&book); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 	book.ID = uint(id)
+
 	updatedBook, err := c.service.UpdateBook(book)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -74,8 +78,10 @@ func (c *BookController) DeleteBook(ctx *gin.Context) {
 
 	if err := ctx.ShouldBindJSON(&book); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 	book.ID = uint(id)
+
 	deletedBook, err := c.service.DeleteBook(book)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
